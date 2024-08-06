@@ -274,7 +274,7 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         ic++;
         runtime->orientation = (runtime->orientation + 3) & 3;
         if (++runtime->left_count > runtime->left_limit)
-          return RunResult::INSTRUCTION;
+          return RunResult::INSTRUCTION_LEFT;
         break;
 
       case Opcode::LOAD:
@@ -381,7 +381,7 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         runtime->x += dx[runtime->orientation];
         runtime->y += dy[runtime->orientation];
         if (++runtime->forward_count > runtime->forward_limit)
-          return RunResult::INSTRUCTION;
+          return RunResult::INSTRUCTION_FORWARD;
         break;
       }
 
@@ -400,7 +400,7 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         if (runtime->bag != kInfinity)
           runtime->bag++;
         if (++runtime->pickbuzzer_count > runtime->pickbuzzer_limit)
-          return RunResult::INSTRUCTION;
+          return RunResult::INSTRUCTION_PICK;
         break;
 
       case Opcode::LEAVEBUZZER:
@@ -409,7 +409,7 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         if (runtime->bag != kInfinity)
           runtime->bag--;
         if (++runtime->leavebuzzer_count > runtime->leavebuzzer_limit)
-          return RunResult::INSTRUCTION;
+          return RunResult::INSTRUCTION_LEAVE;
         break;
 
       case Opcode::EZ: {

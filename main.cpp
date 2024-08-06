@@ -450,6 +450,10 @@ class World {
           programa.AddAttribute("resultadoEjecucion", "ZUMBADOR INVALIDO");
           break;
         case karel::RunResult::INSTRUCTION:
+        case karel::RunResult::INSTRUCTION_FORWARD:
+        case karel::RunResult::INSTRUCTION_LEFT:
+        case karel::RunResult::INSTRUCTION_PICK:
+        case karel::RunResult::INSTRUCTION_LEAVE:
           programa.AddAttribute("resultadoEjecucion",
                                 "LIMITE DE INSTRUCCIONES");
           break;

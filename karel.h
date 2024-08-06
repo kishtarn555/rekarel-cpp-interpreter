@@ -53,11 +53,15 @@ struct Instruction {
 
 enum class RunResult : uint32_t {
   OK,
-  INSTRUCTION,
-  WALL,
+  WALL = 16,
   WORLDUNDERFLOW,
   BAGUNDERFLOW,
-  STACK
+  STACK,
+  INSTRUCTION = 48,
+  INSTRUCTION_LEFT,
+  INSTRUCTION_FORWARD ,
+  INSTRUCTION_PICK,
+  INSTRUCTION_LEAVE
 };
 
 struct Runtime {
