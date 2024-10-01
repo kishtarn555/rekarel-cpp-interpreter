@@ -2,6 +2,7 @@
 #include <optional>
 #include <string_view>
 #include <vector>
+#include <cstdint>
 
 namespace karel {
 

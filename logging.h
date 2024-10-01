@@ -2,6 +2,7 @@
 #define LOGGING_H_
 
 #include <cstring>
+#include <cstdint>
 #include <ostream>
 #include <sstream>
 
