@@ -8,16 +8,16 @@ BINS:=karel karel.js karel-asm.js
 .PHONY: all
 all: ${BINS}
 
-karel: main.cpp karel.cpp util.cpp logging.cpp xml.cpp json.cpp
+karel: main.cpp karel.cpp util.cpp logging.cpp xml.cpp json.cpp world.cpp
 	g++ $^ -static -O2 ${CFLAGS} ${CXXFLAGS} -lexpat -o bin/$@
 
-karel2: main.cpp karel.cpp util.cpp logging.cpp xml.cpp json.cpp
+karel2: main.cpp karel.cpp util.cpp logging.cpp xml.cpp json.cpp world.cpp
 	clang++-6.0 $^ -static -g ${CFLAGS} ${CXXFLAGS} -lexpat -o $@
 
-karel.js: karel_wasm_main.cpp karel.cpp util.cpp logging.cpp json.cpp
+karel.js: karel_wasm_main.cpp karel.cpp util.cpp logging.cpp json.cpp world.cpp
 	emcc -Oz $^ -s "BINARYEN_METHOD='native-wasm'" -s TOTAL_MEMORY=64MB -s WASM=1 -s EXPORTED_FUNCTIONS="['_malloc','_free']" ${CFLAGS} ${CXXFLAGS} -o $@
 
-karel-asm.js: karel_wasm_main.cpp karel.cpp util.cpp logging.cpp json.cpp
+karel-asm.js: karel_wasm_main.cpp karel.cpp util.cpp logging.cpp json.cpp world.cpp
 	emcc -Oz $^ -s "BINARYEN_METHOD='asmjs'" -s TOTAL_MEMORY=64MB -s WASM=1 -s EXPORTED_FUNCTIONS="['_malloc','_free']" ${CFLAGS} ${CXXFLAGS} -o $@
 
 kcl: kcl.cpp
