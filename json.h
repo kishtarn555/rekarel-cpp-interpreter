@@ -1,3 +1,6 @@
+#ifndef JSON_H
+#define JSON_H
+
 #include <iosfwd>
 #include <memory>
 #include <optional>
@@ -85,3 +88,5 @@ std::optional<std::unique_ptr<Value>> Parse(
 std::ostream& operator<<(std::ostream& os, const Value& value);
 
 }  // namespace
+
+#endif

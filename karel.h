@@ -1,3 +1,6 @@
+#ifndef KAREL_H
+#define KAREL_H
+
 #include <limits>
 #include <optional>
 #include <string_view>
@@ -106,3 +109,5 @@ std::optional<std::vector<Instruction>> ParseInstructions(
 RunResult Run(const std::vector<Instruction>& program, Runtime* runtime);
 
 }  // namespace karel
+
+#endif // KAREL_H

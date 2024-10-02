@@ -1,3 +1,6 @@
+#ifndef XML_H_
+#define XML_H_
+
 #include <cstring>
 #include <functional>
 #include <memory>
@@ -123,3 +126,5 @@ class Reader {
 };
 
 }  // namespace xml
+
+#endif // XML_H_
