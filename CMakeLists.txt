@@ -19,4 +19,25 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
+set(Headers
+    json.h
+    karel.h
+    logging.h
+    macros.h
+    util.h
+    world.h
+    xml.h
+)
+
+set(Sources
+    json.cpp
+    karel.cpp
+    logging.cpp
+    util.cpp
+    world.cpp
+    xml.cpp
+)
+
+add_library(${This} STATIC ${Sources} ${Headers})
+
 add_subdirectory(tests)
