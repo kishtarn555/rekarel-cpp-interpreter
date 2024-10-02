@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-set(This ReKarelInterpreter)
+set(This ReKarelInterpreterTests)
 
 set(Sources
     test_hello.cpp
