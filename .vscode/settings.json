@@ -2,6 +2,7 @@
     "files.associations": {
         "string_view": "cpp",
         "optional": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "limits": "cpp"
     }
 }

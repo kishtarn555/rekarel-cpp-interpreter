@@ -10,6 +10,9 @@
 #include <vector>
 
 #include "world.h"
+#include "logging.h"
+#include "xml.h"
+#include "util.h"
 
 namespace karel {
     

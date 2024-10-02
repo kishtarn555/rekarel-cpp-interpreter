@@ -11,8 +11,6 @@
 
 #include "karel.h"
 #include "logging.h"
-#include "util.h"
-#include "xml.h"
 #include "world.h"
 
 namespace {
