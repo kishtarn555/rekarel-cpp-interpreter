@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 echo "== cmake -S . -B build =="
 cmake -S . -B build
 
