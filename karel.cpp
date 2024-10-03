@@ -466,7 +466,11 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         break;
 
       case Opcode::PARAM:
-        expression_stack.emplace_back(function_stack.top().param_sp);
+        expression_stack.emplace_back(
+          expression_stack[          
+            function_stack.top().param_sp - curr.arg
+          ]
+        );
         break;
       case Opcode::SRET:
         runtime->ret = expression_stack.back();
