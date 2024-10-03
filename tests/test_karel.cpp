@@ -37,3 +37,13 @@ TEST_F(TestKarel, LINE) {
   ASSERT_EQ(2, runtime->line) << "Line was not set correctly";
   ASSERT_EQ(5, runtime->column) << "Column was not set correclty";
 }
+
+TEST_F(TestKarel, SRET) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 12},
+    {karel::Opcode::SRET}
+  };
+  auto result = karel::Run(program,runtime);
+  ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  ASSERT_EQ(12, runtime->ret) << "RET was not set correctly";
+}
