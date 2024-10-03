@@ -89,6 +89,8 @@ std::optional<Opcode> ParseOpcode(std::string_view name) {
     return Opcode::RET;
   if (name == "PARAM")
     return Opcode::PARAM;
+  if (name == "LTE")
+    return Opcode::LTE;
   LOG(ERROR) << "Invalid mnemonic: " << name;
   return std::nullopt;
 }
@@ -151,6 +153,7 @@ std::optional<Instruction> ParseInstruction(const json::ListValue& value) {
     case Opcode::SRET:
     case Opcode::LRET:
     case Opcode::LT:
+    case Opcode::LTE:
       // nullary
       if (value.value().size() != 1) {
         LOG(ERROR) << "Unexpected argument to " << value;
@@ -466,12 +469,20 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
       case Opcode::LRET:
         expression_stack.emplace_back(runtime->ret);
         break;
-      case Opcode::LT:
+      case Opcode::LT: {
         int32_t op2 = expression_stack.back();
         expression_stack.pop_back();
         int32_t op1 = expression_stack.back();
         expression_stack.back() = (op1 < op2) ? 1 : 0;
         break;
+      }
+      case Opcode::LTE: {
+        int32_t op2 = expression_stack.back();
+        expression_stack.pop_back();
+        int32_t op1 = expression_stack.back();
+        expression_stack.back() = (op1 <= op2) ? 1 : 0;
+        break;
+      }
     }
 
     pc++;
