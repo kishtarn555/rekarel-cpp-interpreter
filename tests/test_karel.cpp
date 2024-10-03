@@ -117,3 +117,41 @@ TEST_F(TestKarel, LT_5_5) {
   ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
   ASSERT_EQ(0, runtime->ret) << "RET was not set correctly";
 }
+
+
+
+TEST_F(TestKarel, LTE_3_5) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 3},
+    {karel::Opcode::LOAD, 5},
+    {karel::Opcode::LTE},
+    {karel::Opcode::SRET},
+  };
+  auto result = karel::Run(program,runtime);
+  ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  ASSERT_EQ(1, runtime->ret) << "RET was not set correctly";
+}
+
+TEST_F(TestKarel, LTE_5_3) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 5},
+    {karel::Opcode::LOAD, 3},
+    {karel::Opcode::LTE},
+    {karel::Opcode::SRET},
+  };
+  auto result = karel::Run(program,runtime);
+  ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  ASSERT_EQ(0, runtime->ret) << "RET was not set correctly";
+}
+
+TEST_F(TestKarel, LTE_5_5) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 5},
+    {karel::Opcode::LOAD, 5},
+    {karel::Opcode::LTE},
+    {karel::Opcode::SRET},
+  };
+  auto result = karel::Run(program,runtime);
+  ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  ASSERT_EQ(1, runtime->ret) << "RET was not set correctly";
+}
