@@ -53,6 +53,7 @@ constexpr const char* kOpcodeNames[] = {
 struct Instruction {
   Opcode opcode = Opcode::HALT;
   int32_t arg = 0;
+  int32_t arg2 = 0;
 };
 
 enum class RunResult : uint32_t {
@@ -74,6 +75,7 @@ struct Runtime {
   size_t y = 0;
   size_t bag = 0;
   size_t line = 0;
+  size_t column = 0;
   size_t instruction_limit = 10000000;
   size_t stack_limit = 65000;
   size_t forward_limit = std::numeric_limits<size_t>::max();
