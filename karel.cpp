@@ -147,8 +147,6 @@ std::optional<Instruction> ParseInstruction(const json::ListValue& value) {
     case Opcode::LEAVEBUZZER:
     case Opcode::POP:
     case Opcode::DUP:
-    case Opcode::DEC:
-    case Opcode::INC:
     case Opcode::RET:
     case Opcode::SRET:
       // nullary
@@ -162,6 +160,8 @@ std::optional<Instruction> ParseInstruction(const json::ListValue& value) {
     case Opcode::LOAD:
     case Opcode::JZ:
     case Opcode::JMP:
+    case Opcode::DEC:
+    case Opcode::INC:
       // unary
       if (value.value().size() != 2) {
         LOG(ERROR) << "Unexpected arguments to " << value;
@@ -447,11 +447,11 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         break;
 
       case Opcode::DEC:
-        expression_stack.back()--;
+        expression_stack.back() -= curr.arg;
         break;
 
       case Opcode::INC:
-        expression_stack.back()++;
+        expression_stack.back() += curr.arg;
         break;
 
       case Opcode::PARAM:
