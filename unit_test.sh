@@ -9,5 +9,5 @@ echo "== cmake --build build =="
 cmake --build build
 cd build
 echo "== ctest =="
-ctest
+ctest --output-on-failure
 cd ..
