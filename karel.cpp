@@ -158,7 +158,6 @@ std::optional<Instruction> ParseInstruction(const json::ListValue& value) {
       return ins;
 
     case Opcode::PARAM:
-    case Opcode::LINE:
     case Opcode::LOAD:
     case Opcode::JZ:
     case Opcode::JMP:
@@ -173,6 +172,24 @@ std::optional<Instruction> ParseInstruction(const json::ListValue& value) {
       }
       ins.arg = value.value()[1]->AsInt().value();
       return ins;
+      
+    case Opcode::LINE: {
+      if (value.value().size() != 2) {
+        LOG(ERROR) << "Unexpected arguments to " << value;
+        return std::nullopt;
+      }
+      if (value.value()[1]->GetType() != json::Type::INT) {
+        LOG(ERROR) << "Invalid argument to " << value;
+        return std::nullopt;
+      }
+      if (value.value()[2]->GetType() != json::Type::INT) {
+        LOG(ERROR) << "Invalid argument to " << value;
+        return std::nullopt;
+      }
+      ins.arg = value.value()[1]->AsInt().value();
+      ins.arg2 = value.value()[1]->AsInt().value();
+      return ins;
+    }
 
     case Opcode::EZ: {
       // unary, string
@@ -268,6 +285,7 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
 
       case Opcode::LINE:
         runtime->line = curr.arg;
+        runtime->column = curr.arg2;
         break;
 
       case Opcode::LEFT:
@@ -446,10 +464,10 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
       fprintf(stdout,
               "state "
               "{\"pc\":%d,\"stackSize\":%zu,\"expressionStack\":%s\"line\":%zu,"
-              "\"ic\":%zu,\"running\":"
+              "\"column\":%zu,\"ic\":%zu,\"running\":"
               "true}\n",
               pc, function_stack.size(), Stringify(expression_stack).c_str(),
-              runtime->line, ic);
+              runtime->line, runtime->column, ic);
       fflush(stdout);
     }
   }
