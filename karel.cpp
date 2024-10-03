@@ -313,7 +313,7 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         function_stack.emplace(
           StackFrame{
             pc, 
-            expression_stack.size(), 
+            expression_stack.size() - 1, 
             expression_stack.size() - param_count
             }
         );
