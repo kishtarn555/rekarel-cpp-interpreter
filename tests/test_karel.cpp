@@ -47,3 +47,25 @@ TEST_F(TestKarel, SRET) {
   ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
   ASSERT_EQ(12, runtime->ret) << "RET was not set correctly";
 }
+
+TEST_F(TestKarel, INC) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 10},
+    {karel::Opcode::INC, 4},
+    {karel::Opcode::SRET},
+  };
+  auto result = karel::Run(program,runtime);
+  ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  ASSERT_EQ(14, runtime->ret) << "RET was not set correctly";
+}
+
+TEST_F(TestKarel, DEC) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 10},
+    {karel::Opcode::DEC, 4},
+    {karel::Opcode::SRET},
+  };
+  auto result = karel::Run(program,runtime);
+  ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  ASSERT_EQ(6, runtime->ret) << "RET was not set correctly";
+}
