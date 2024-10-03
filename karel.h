@@ -42,7 +42,8 @@ enum class Opcode : uint32_t {
   PARAM,
   SRET,
   LRET,
-  LT
+  LT,
+  LTE
 };
 
 constexpr const char* kOpcodeNames[] = {
@@ -52,7 +53,7 @@ constexpr const char* kOpcodeNames[] = {
     "FORWARD", "WORLDBUZZERS", "BAGBUZZERS", "PICKBUZZER", "LEAVEBUZZER",
     "LOAD",    "POP",          "DUP",        "DEC",        "INC",
     "CALL",    "RET",          "PARAM",      "SRET",       "LRET",
-    "LT"
+    "LT",      "LTE"
   };
 
 struct Instruction {
