@@ -155,3 +155,59 @@ TEST_F(TestKarel, LTE_5_5) {
   ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
   ASSERT_EQ(1, runtime->ret) << "RET was not set correctly";
 }
+
+TEST_F(TestKarel, SIMPLE_CALL) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 0},
+    {karel::Opcode::CALL, 3},
+    {karel::Opcode::HALT},
+    {karel::Opcode::FORWARD},
+    {karel::Opcode::RET}
+  };
+  auto result = karel::Run(program,runtime);
+  ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  ASSERT_EQ(runtime->x, 0) << "X is wrong";
+  ASSERT_EQ(runtime->y, 1) << "Y is wrong";
+
+}
+
+TEST_F(TestKarel, PARAMS) {
+  for (int i =0; i < 3; i++) {
+    std::vector<karel::Instruction> program = {
+      {karel::Opcode::LOAD, 0},
+      {karel::Opcode::LOAD, 1},
+      {karel::Opcode::LOAD, 2},
+      {karel::Opcode::LOAD, 3},
+      {karel::Opcode::CALL, 6},
+      {karel::Opcode::HALT},
+      {karel::Opcode::PARAM, i},
+      {karel::Opcode::SRET},
+      {karel::Opcode::RET}
+    };
+    auto result = karel::Run(program,runtime);
+    EXPECT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status at " << i;
+    EXPECT_EQ(runtime->ret, 2-i) << "RET was not set correctly: " << i;
+  }
+}
+
+TEST_F(TestKarel, STACK_RESTORATION_AFTER_RETURN) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 10},
+    {karel::Opcode::LOAD, 0},
+    {karel::Opcode::LOAD, 1},
+    {karel::Opcode::LOAD, 2},
+    {karel::Opcode::LOAD, 3},
+    {karel::Opcode::CALL, 8},
+    {karel::Opcode::SRET},
+    {karel::Opcode::HALT},
+    {karel::Opcode::PARAM, 0},
+    {karel::Opcode::PARAM, 1},
+    {karel::Opcode::PARAM, 1},
+    {karel::Opcode::PARAM, 2},
+    {karel::Opcode::RET}
+  };
+  auto result = karel::Run(program,runtime);
+  EXPECT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  EXPECT_EQ(runtime->ret, 10) << "RET was not set correctly";
+
+}
