@@ -53,6 +53,7 @@ constexpr const char* kOpcodeNames[] = {
 struct Instruction {
   Opcode opcode = Opcode::HALT;
   int32_t arg = 0;
+  int32_t arg2 = 0;
 };
 
 enum class RunResult : uint32_t {
