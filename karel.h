@@ -41,7 +41,8 @@ enum class Opcode : uint32_t {
   RET,
   PARAM,
   SRET,
-  LRET
+  LRET,
+  LT
 };
 
 constexpr const char* kOpcodeNames[] = {
@@ -50,7 +51,9 @@ constexpr const char* kOpcodeNames[] = {
     "OR",      "EQ",           "EZ",         "JZ",         "JMP",
     "FORWARD", "WORLDBUZZERS", "BAGBUZZERS", "PICKBUZZER", "LEAVEBUZZER",
     "LOAD",    "POP",          "DUP",        "DEC",        "INC",
-    "CALL",    "RET",          "PARAM",      "SRET",       "LRET"};
+    "CALL",    "RET",          "PARAM",      "SRET",       "LRET",
+    "LT"
+  };
 
 struct Instruction {
   Opcode opcode = Opcode::HALT;

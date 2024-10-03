@@ -150,6 +150,7 @@ std::optional<Instruction> ParseInstruction(const json::ListValue& value) {
     case Opcode::RET:
     case Opcode::SRET:
     case Opcode::LRET:
+    case Opcode::LT:
       // nullary
       if (value.value().size() != 1) {
         LOG(ERROR) << "Unexpected argument to " << value;
@@ -464,6 +465,12 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         break;
       case Opcode::LRET:
         expression_stack.emplace_back(runtime->ret);
+        break;
+      case Opcode::LT:
+        int32_t op2 = expression_stack.back();
+        expression_stack.pop_back();
+        int32_t op1 = expression_stack.back();
+        expression_stack.back() = (op1 < op2) ? 1 : 0;
         break;
     }
 
