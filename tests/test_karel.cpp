@@ -27,3 +27,13 @@ TEST_F(TestKarel, HALT) {
   auto result = karel::Run(program,runtime);
   ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
 }
+
+TEST_F(TestKarel, LINE) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LINE, 2, 5}
+  };
+  auto result = karel::Run(program,runtime);
+  ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  ASSERT_EQ(2, runtime->line) << "Line was not set correctly";
+  ASSERT_EQ(5, runtime->column) << "Column was not set correclty";
+}
