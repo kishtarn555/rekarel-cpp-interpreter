@@ -432,6 +432,9 @@ std::optional<World> World::Parse(int fd) {
         case karel::RunResult::STACK:
           programa.AddAttribute("resultadoEjecucion", "STACK OVERFLOW");
           break;
+        case karel::RunResult::CALLSIZE:
+          programa.AddAttribute("resultadoEjecucion", "LIMITE DE LONGITUD DE LLAMADA");
+          break;
       }
       if (dump_position_ || dump_orientation_ || dump_bag_) {
         auto karel = programa.CreateElement("karel");
