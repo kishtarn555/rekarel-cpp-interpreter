@@ -359,6 +359,63 @@ TEST_F(TestKarel, CALL_OVER_THE_LIMIT) {
   EXPECT_EQ(result, karel::RunResult::CALLSIZE) << "Run should have ended in CALLSIZE RTE";
 }
 
-TEST_F(TestKarel, DEFAULT_PARAM_LIMIT) {
+TEST_F(TestKarel, DEFAULT_VALUES) {
   EXPECT_EQ(runtime->call_param_limit, 5) << "Default call param limit expected to be 5";
+  EXPECT_EQ(runtime->stack_memory_limit, 65000) << "Default stack memory is incorrect";
+}
+
+
+TEST_F(TestKarel, STACK_MEMORY_ON_THE_LIMIT) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 0},//0
+    {karel::Opcode::CALL, 3},//1
+    {karel::Opcode::HALT},//2
+    {karel::Opcode::LOAD, 5},//3
+    {karel::Opcode::LOAD, 0},//4
+    {karel::Opcode::LOAD, 2},//5
+    {karel::Opcode::CALL, 8},//6
+    {karel::Opcode::RET},//7
+    {karel::Opcode::PARAM, 1},//8
+    {karel::Opcode::PARAM, 0},//9
+    {karel::Opcode::LTE},//10
+    {karel::Opcode::NOT},//11
+    {karel::Opcode::JZ,5},//12
+    {karel::Opcode::PARAM, 1},//13
+    {karel::Opcode::PARAM,0},//14
+    {karel::Opcode::INC,1},//15
+    {karel::Opcode::LOAD, 2},//16
+    {karel::Opcode::CALL, 8},//17
+    {karel::Opcode::RET},//18
+  };
+  runtime->call_param_limit = 13;
+  auto result = karel::Run(program,runtime);
+  EXPECT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  EXPECT_EQ(runtime->stack_memory, 0) << "STACK memory did not returned to zero";
+}
+
+TEST_F(TestKarel, STACK_MEMORY_OVER_THE_LIMIT) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 0},//0
+    {karel::Opcode::CALL, 3},//1
+    {karel::Opcode::HALT},//2
+    {karel::Opcode::LOAD, 5},//3
+    {karel::Opcode::LOAD, 0},//4
+    {karel::Opcode::LOAD, 2},//5
+    {karel::Opcode::CALL, 8},//6
+    {karel::Opcode::RET},//7
+    {karel::Opcode::PARAM, 1},//8
+    {karel::Opcode::PARAM, 0},//9
+    {karel::Opcode::LTE},//10
+    {karel::Opcode::NOT},//11
+    {karel::Opcode::JZ,5},//12
+    {karel::Opcode::PARAM, 1},//13
+    {karel::Opcode::PARAM,0},//14
+    {karel::Opcode::INC,1},//15
+    {karel::Opcode::LOAD, 2},//16
+    {karel::Opcode::CALL, 8},//17
+    {karel::Opcode::RET},//18
+  };
+  runtime->stack_memory_limit = 12;
+  auto result = karel::Run(program,runtime);
+  EXPECT_EQ(result, karel::RunResult::STACKMEMORY) << "Run should have ended in STACKMEMORY RTE";
 }
