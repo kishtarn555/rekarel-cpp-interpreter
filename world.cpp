@@ -437,6 +437,9 @@ std::optional<World> World::Parse(int fd) {
         case karel::RunResult::STACK:
           programa.AddAttribute("resultadoEjecucion", "STACK OVERFLOW");
           break;
+        case karel::RunResult::STACKMEMORY:
+          programa.AddAttribute("resultadoEjecucion", "LIMITE DE MEMORIA DEL STACK");
+          break;
         case karel::RunResult::CALLSIZE:
           programa.AddAttribute("resultadoEjecucion", "LIMITE DE LONGITUD DE LLAMADA");
           break;
