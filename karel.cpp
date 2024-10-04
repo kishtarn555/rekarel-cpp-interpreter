@@ -186,7 +186,7 @@ std::optional<Instruction> ParseInstruction(const json::ListValue& value) {
       return ins;
       
     case Opcode::LINE: {
-      if (value.value().size() != 2) {
+      if (value.value().size() != 3) {
         LOG(ERROR) << "Unexpected arguments to " << value;
         return std::nullopt;
       }
