@@ -241,6 +241,7 @@ std::optional<Instruction> ParseInstruction(const json::ListValue& value) {
 struct StackFrame {
   int32_t pc;
   size_t param_sp;
+  size_t param_count;
   size_t sp;
 };
 
@@ -319,11 +320,13 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         function_stack.emplace(
           StackFrame{
             pc, 
-            expression_stack.size() - 1, 
+            expression_stack.size() - 1,
+            param_count,
             expression_stack.size() - param_count
             }
         );
         pc = curr.arg - 1;
+        runtime->stack_memory += param_count == 0 ? 1 : param_count;
 
         if (function_stack.size() >= runtime->stack_limit)
           return RunResult::STACK;
@@ -335,7 +338,8 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         if (function_stack.empty())
           return RunResult::OK;
         StackFrame& frame = function_stack.top();
-        pc = frame.pc;
+        pc = frame.pc;        
+        runtime->stack_memory -= frame.param_count == 0 ? 1 : frame.param_count;
         if (expression_stack.size() > frame.sp)
           expression_stack.resize(frame.sp);
         function_stack.pop();

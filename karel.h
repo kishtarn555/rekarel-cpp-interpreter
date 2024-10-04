@@ -92,6 +92,7 @@ struct Runtime {
   size_t left_count = 0;
   size_t leavebuzzer_count = 0;
   size_t pickbuzzer_count = 0;
+  size_t stack_memory = 0;
 
   size_t width = 100;
   size_t height = 100;
