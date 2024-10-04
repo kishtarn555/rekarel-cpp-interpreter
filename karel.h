@@ -68,6 +68,8 @@ enum class RunResult : uint32_t {
   WORLDUNDERFLOW,
   BAGUNDERFLOW,
   STACK,
+  //STACKMEMORY,
+  CALLSIZE,
   INSTRUCTION = 48,
   INSTRUCTION_LEFT,
   INSTRUCTION_FORWARD ,
@@ -84,6 +86,7 @@ struct Runtime {
   size_t column = 0;
   size_t instruction_limit = 10000000;
   size_t stack_limit = 65000;
+  size_t call_param_limit = 5;
   size_t forward_limit = std::numeric_limits<size_t>::max();
   size_t left_limit = std::numeric_limits<size_t>::max();
   size_t pickbuzzer_limit = std::numeric_limits<size_t>::max();
