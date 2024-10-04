@@ -328,7 +328,9 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         );
         pc = curr.arg - 1;
         runtime->stack_memory += param_count == 0 ? 1 : param_count;
-
+        if (runtime->stack_memory > runtime->stack_memory_limit) {
+          return RunResult::STACKMEMORY;
+        }
         if (function_stack.size() >= runtime->stack_limit)
           return RunResult::STACK;
 

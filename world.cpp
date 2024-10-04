@@ -70,13 +70,18 @@ std::optional<World> World::Parse(int fd) {
                      node.GetAttribute("instruccionesMaximasAEjecutar")),
                  stack_limit =
                      ParseString<size_t>(node.GetAttribute("longitudStack")),
-                 call_param_limit = ParseString<size_t>(node.GetAttribute("llamadaMaxima"));
+                 call_param_limit = 
+                     ParseString<size_t>(node.GetAttribute("llamadaMaxima")),
+                 stack_memory_limit = 
+                     ParseString<size_t>(node.GetAttribute("memoriaStack"));
             if (instruction_limit)
               world.runtime_.instruction_limit = instruction_limit.value();
             if (stack_limit)
               world.runtime_.stack_limit = stack_limit.value();
             if (call_param_limit)
               world.runtime_.call_param_limit = call_param_limit.value();
+            if (stack_memory_limit)
+              world.runtime_.stack_memory_limit = stack_memory_limit.value();
           } else if (name == "comando") {
             auto nombre = node.GetAttribute("nombre");
             auto maximoNumeroDeEjecuciones = ParseString<size_t>(
@@ -431,6 +436,9 @@ std::optional<World> World::Parse(int fd) {
           break;
         case karel::RunResult::STACK:
           programa.AddAttribute("resultadoEjecucion", "STACK OVERFLOW");
+          break;
+        case karel::RunResult::STACKMEMORY:
+          programa.AddAttribute("resultadoEjecucion", "LIMITE DE MEMORIA DEL STACK");
           break;
         case karel::RunResult::CALLSIZE:
           programa.AddAttribute("resultadoEjecucion", "LIMITE DE LONGITUD DE LLAMADA");
