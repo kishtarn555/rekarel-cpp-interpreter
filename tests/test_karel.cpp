@@ -293,3 +293,32 @@ TEST_F(TestKarel, CODE_PARSE) {
   // ASSERT_EQ(program.value(), expected)<< "Program output is not what it was expected";
 
 }
+
+
+
+TEST_F(TestKarel, STACK_MEMORY_IS_ZERO) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 0},//0
+    {karel::Opcode::CALL, 3},//1
+    {karel::Opcode::HALT},//2
+    {karel::Opcode::LOAD, 5},//3
+    {karel::Opcode::LOAD, 0},//4
+    {karel::Opcode::LOAD, 2},//5
+    {karel::Opcode::CALL, 8},//6
+    {karel::Opcode::RET},//7
+    {karel::Opcode::PARAM, 1},//8
+    {karel::Opcode::PARAM, 0},//9
+    {karel::Opcode::LTE},//10
+    {karel::Opcode::NOT},//11
+    {karel::Opcode::JZ,5},//12
+    {karel::Opcode::PARAM, 1},//13
+    {karel::Opcode::PARAM,0},//14
+    {karel::Opcode::INC,1},//15
+    {karel::Opcode::LOAD, 2},//16
+    {karel::Opcode::CALL, 8},//17
+    {karel::Opcode::RET},//18
+  };
+  auto result = karel::Run(program,runtime);
+  EXPECT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  EXPECT_EQ(runtime->stack_memory, 0) << "STACK memory did not returned to zero";
+}
