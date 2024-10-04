@@ -322,3 +322,43 @@ TEST_F(TestKarel, STACK_MEMORY_IS_ZERO) {
   EXPECT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
   EXPECT_EQ(runtime->stack_memory, 0) << "STACK memory did not returned to zero";
 }
+
+TEST_F(TestKarel, CALL_TO_THE_LIMIT) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 1},//0
+    {karel::Opcode::LOAD, 2},//1
+    {karel::Opcode::LOAD, 3},//2
+    {karel::Opcode::LOAD, 4},//3
+    {karel::Opcode::LOAD, 5},//4
+    {karel::Opcode::LOAD, 5},//5
+    {karel::Opcode::CALL, 8},//6
+    {karel::Opcode::HALT},//7
+    {karel::Opcode::RET},//8
+  };
+  runtime->call_param_limit = 5;
+  auto result = karel::Run(program,runtime);
+  EXPECT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  EXPECT_EQ(runtime->stack_memory, 0) << "STACK memory did not returned to zero";
+}
+
+TEST_F(TestKarel, CALL_OVER_THE_LIMIT) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::LOAD, 1},//0
+    {karel::Opcode::LOAD, 2},//1
+    {karel::Opcode::LOAD, 3},//2
+    {karel::Opcode::LOAD, 4},//3
+    {karel::Opcode::LOAD, 5},//4
+    {karel::Opcode::LOAD, 6},//5
+    {karel::Opcode::LOAD, 6},//6
+    {karel::Opcode::CALL, 9},//7
+    {karel::Opcode::HALT},//8
+    {karel::Opcode::RET},//9
+  };
+  runtime->call_param_limit = 5;
+  auto result = karel::Run(program,runtime);
+  EXPECT_EQ(result, karel::RunResult::CALLSIZE) << "Run should have ended in CALLSIZE RTE";
+}
+
+TEST_F(TestKarel, DEFAULT_PARAM_LIMIT) {
+  EXPECT_EQ(runtime->call_param_limit, 5) << "Default call param limit expected to be 5";
+}
