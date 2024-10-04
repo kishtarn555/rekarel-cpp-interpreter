@@ -89,6 +89,12 @@ std::optional<Opcode> ParseOpcode(std::string_view name) {
     return Opcode::RET;
   if (name == "PARAM")
     return Opcode::PARAM;
+  if (name == "SRET")
+    return Opcode::SRET;
+  if (name == "LRET")
+    return Opcode::LRET;
+  if (name == "LT")
+    return Opcode::LT;
   if (name == "LTE")
     return Opcode::LTE;
   LOG(ERROR) << "Invalid mnemonic: " << name;
