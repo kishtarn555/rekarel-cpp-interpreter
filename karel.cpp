@@ -314,6 +314,9 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
       case Opcode::CALL: {
         ic++;                
         size_t param_count = expression_stack.back();
+        if (param_count > runtime->call_param_limit) {
+          return RunResult::CALLSIZE;
+        }
         expression_stack.pop_back();
 
         function_stack.emplace(
