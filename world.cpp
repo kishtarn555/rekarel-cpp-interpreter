@@ -69,11 +69,14 @@ std::optional<World> World::Parse(int fd) {
             auto instruction_limit = ParseString<size_t>(
                      node.GetAttribute("instruccionesMaximasAEjecutar")),
                  stack_limit =
-                     ParseString<size_t>(node.GetAttribute("longitudStack"));
+                     ParseString<size_t>(node.GetAttribute("longitudStack")),
+                 call_param_limit = ParseString<size_t>(node.GetAttribute("llamadaMaxima"));
             if (instruction_limit)
               world.runtime_.instruction_limit = instruction_limit.value();
             if (stack_limit)
               world.runtime_.stack_limit = stack_limit.value();
+            if (call_param_limit)
+              world.runtime_.call_param_limit = call_param_limit.value();
           } else if (name == "comando") {
             auto nombre = node.GetAttribute("nombre");
             auto maximoNumeroDeEjecuciones = ParseString<size_t>(
