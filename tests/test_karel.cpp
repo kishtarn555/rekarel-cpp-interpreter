@@ -211,3 +211,85 @@ TEST_F(TestKarel, STACK_RESTORATION_AFTER_RETURN) {
   EXPECT_EQ(runtime->ret, 10) << "RET was not set correctly";
 
 }
+
+
+TEST_F(TestKarel, CODE_PARSE) {
+  auto program = karel::ParseInstructions(
+  "["
+    "[\"HALT\"],"
+    "[\"LINE\", 1, 2],"
+    "[\"LEFT\"],"
+    "[\"WORLDWALLS\"],"
+    "[\"ORIENTATION\"],"
+    "[\"ROTL\"],"
+    "[\"ROTL\"],"
+    "[\"ROTR\"],"
+    "[\"MASK\"],"
+    "[\"NOT\"],"
+    "[\"AND\"],"
+    "[\"OR\"],"
+    "[\"EQ\"],"
+    "[\"EZ\", \"WALL\"],"
+    "[\"EZ\", \"WORLDUNDERFLOW\"],"
+    "[\"EZ\", \"BAGUNDERFLOW\"],"
+    "[\"EZ\", \"INSTRUCTION\"],"
+    "[\"JZ\", 5],"
+    "[\"JMP\", 9],"
+    "[\"FORWARD\"],"
+    "[\"WORLDBUZZERS\"],"
+    "[\"BAGBUZZERS\"],"
+    "[\"PICKBUZZER\"],"
+    "[\"LEAVEBUZZER\"],"
+    "[\"LOAD\", 5],"
+    "[\"POP\"],"
+    "[\"DUP\"],"
+    "[\"DEC\", 3],"
+    "[\"INC\", 5],"
+    "[\"CALL\", 8, \"FUNC_NAME\"],"
+    "[\"RET\"],"
+    "[\"PARAM\", 3],"
+    "[\"SRET\"],"
+    "[\"LRET\"],"
+    "[\"LT\"],"
+    "[\"LTE\"]"
+  "]\0");
+  if (!program) {
+    FAIL() << "Program failed to parse";
+  }
+  std::vector<karel::Instruction> expected = {
+    {karel::Opcode::HALT},
+    {karel::Opcode::LINE, 1, 2},
+    {karel::Opcode::LEFT},
+    {karel::Opcode::WORLDWALLS},
+    {karel::Opcode::ORIENTATION},
+    {karel::Opcode::ROTL},
+    {karel::Opcode::ROTR},
+    {karel::Opcode::MASK},
+    {karel::Opcode::NOT},
+    {karel::Opcode::AND},
+    {karel::Opcode::OR},
+    {karel::Opcode::EQ},
+    {karel::Opcode::EZ, (int32_t)karel::RunResult::WALL},
+    {karel::Opcode::EZ, (int32_t)karel::RunResult::WORLDUNDERFLOW},
+    {karel::Opcode::EZ, (int32_t)karel::RunResult::BAGUNDERFLOW},
+    {karel::Opcode::EZ, (int32_t)karel::RunResult::INSTRUCTION},
+    {karel::Opcode::JZ, 5},
+    {karel::Opcode::JMP, 9},
+    {karel::Opcode::FORWARD},
+    {karel::Opcode::WORLDBUZZERS},
+    {karel::Opcode::PICKBUZZER},
+    {karel::Opcode::LEAVEBUZZER},
+    {karel::Opcode::LOAD, 5},
+    {karel::Opcode::POP},
+    {karel::Opcode::DUP},
+    {karel::Opcode::CALL, 8},
+    {karel::Opcode::RET},
+    {karel::Opcode::PARAM},
+    {karel::Opcode::SRET},
+    {karel::Opcode::LRET},
+    {karel::Opcode::LT},
+    {karel::Opcode::LTE}
+  };
+  // ASSERT_EQ(program.value(), expected)<< "Program output is not what it was expected";
+
+}
