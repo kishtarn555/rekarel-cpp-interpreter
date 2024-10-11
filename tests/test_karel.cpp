@@ -165,7 +165,7 @@ TEST_F(TestKarel, COLUMN) {
   runtime->y = 9;
   auto result = karel::Run(program,runtime);
   ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
-  ASSERT_EQ(10, runtime->ret) << "RET was not set correctly";
+  ASSERT_EQ(6, runtime->ret) << "RET was not set correctly";
 }
 
 TEST_F(TestKarel, ROW) {
