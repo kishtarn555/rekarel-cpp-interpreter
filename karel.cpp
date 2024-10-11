@@ -99,6 +99,8 @@ std::optional<Opcode> ParseOpcode(std::string_view name) {
     return Opcode::LTE;
   if (name == "COLUMN")
     return Opcode::COLUMN;
+  if (name == "ROW")
+    return Opcode::ROW;
   LOG(ERROR) << "Invalid mnemonic: " << name;
   return std::nullopt;
 }
@@ -163,6 +165,7 @@ std::optional<Instruction> ParseInstruction(const json::ListValue& value) {
     case Opcode::LT:
     case Opcode::LTE:
     case Opcode::COLUMN:
+    case Opcode::ROW:
       // nullary
       if (value.value().size() != 1) {
         LOG(ERROR) << "Unexpected argument to " << value;
@@ -512,6 +515,9 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
       }
       case Opcode::COLUMN:
         expression_stack.emplace_back(runtime->y+1);
+        break;
+      case Opcode::ROW:
+        expression_stack.emplace_back(runtime->x+1);
         break;
     }
 
