@@ -517,7 +517,7 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         expression_stack.emplace_back(runtime->y+1);
         break;
       case Opcode::ROW:
-        expression_stack.emplace_back(runtime->x+1);
+        expression_stack.emplace_back(runtime->y+1);
         break;
     }
 
