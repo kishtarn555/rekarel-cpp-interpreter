@@ -168,6 +168,18 @@ TEST_F(TestKarel, COLUMN) {
   ASSERT_EQ(10, runtime->ret) << "RET was not set correctly";
 }
 
+TEST_F(TestKarel, ROW) {
+  std::vector<karel::Instruction> program = {
+    {karel::Opcode::ROW},
+    {karel::Opcode::SRET},
+  };
+  runtime->x = 5;
+  runtime->y = 9;
+  auto result = karel::Run(program,runtime);
+  ASSERT_EQ(result, karel::RunResult::OK) << "Run did not end in OK status";
+  ASSERT_EQ(10, runtime->ret) << "RET was not set correctly";
+}
+
 TEST_F(TestKarel, SIMPLE_CALL) {
   std::vector<karel::Instruction> program = {
     {karel::Opcode::LOAD, 0},
@@ -264,7 +276,8 @@ TEST_F(TestKarel, CODE_PARSE) {
     "[\"LRET\"],"
     "[\"LT\"],"
     "[\"LTE\"],"
-    "[\"COLUMN\"]"
+    "[\"COLUMN\"],"
+    "[\"ROW\"]"
   "]\0");
   if (!program) {
     FAIL() << "Program failed to parse";
