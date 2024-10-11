@@ -43,7 +43,8 @@ enum class Opcode : uint32_t {
   SRET,
   LRET,
   LT,
-  LTE
+  LTE,
+  COLUMN
 };
 
 constexpr const char* kOpcodeNames[] = {
