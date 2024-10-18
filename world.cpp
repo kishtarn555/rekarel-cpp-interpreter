@@ -421,10 +421,10 @@ std::optional<World> World::Parse(int fd) {
           programa.AddAttribute("resultadoEjecucion", "MOVIMIENTO INVALIDO");
           break;
         case karel::RunResult::WORLDUNDERFLOW:
-          programa.AddAttribute("resultadoEjecucion", "ZUMBADOR INVALIDO");
+          programa.AddAttribute("resultadoEjecucion", "ZUMBADOR INVALIDO MUNDO");
           break;
         case karel::RunResult::BAGUNDERFLOW:
-          programa.AddAttribute("resultadoEjecucion", "ZUMBADOR INVALIDO");
+          programa.AddAttribute("resultadoEjecucion", "ZUMBADOR INVALIDO MOCHILA");
           break;
         case karel::RunResult::INSTRUCTION:
         case karel::RunResult::INSTRUCTION_FORWARD:
