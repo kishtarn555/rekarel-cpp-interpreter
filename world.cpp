@@ -427,12 +427,24 @@ std::optional<World> World::Parse(int fd) {
           programa.AddAttribute("resultadoEjecucion", "ZUMBADOR INVALIDO MOCHILA");
           break;
         case karel::RunResult::INSTRUCTION:
+          programa.AddAttribute("resultadoEjecucion",
+                                "LIMITE DE INSTRUCCIONES GENERAL");
+          break;
         case karel::RunResult::INSTRUCTION_FORWARD:
+          programa.AddAttribute("resultadoEjecucion",
+                                "LIMITE DE INSTRUCCIONES AVANZA");
+          break;
         case karel::RunResult::INSTRUCTION_LEFT:
+          programa.AddAttribute("resultadoEjecucion",
+                                "LIMITE DE INSTRUCCIONES IZQUIERDA");
+          break;
         case karel::RunResult::INSTRUCTION_PICK:
+          programa.AddAttribute("resultadoEjecucion",
+                                "LIMITE DE INSTRUCCIONES COGE_ZUMBADOR");
+          break;
         case karel::RunResult::INSTRUCTION_LEAVE:
           programa.AddAttribute("resultadoEjecucion",
-                                "LIMITE DE INSTRUCCIONES");
+                                "LIMITE DE INSTRUCCIONES DEJA_ZUMBADOR");
           break;
         case karel::RunResult::STACK:
           programa.AddAttribute("resultadoEjecucion", "STACK OVERFLOW");
