@@ -12,6 +12,7 @@
 #include "karel.h"
 #include "logging.h"
 #include "world.h"
+#include "util.h"
 
 namespace {
 
@@ -101,6 +102,44 @@ int main(int argc, char* argv[]) {
     return -1;
 
   auto result = karel::Run(program.value(), world->runtime());
+  switch (result) {
+    case karel::RunResult::OK:
+      // No STDERR
+      break;
+    case karel::RunResult::WALL:
+      WriteFileDescriptor(STDERR_FILENO, "MOVIMIENTO INVALIDO");
+      break;
+    case karel::RunResult::WORLDUNDERFLOW:
+      WriteFileDescriptor(STDERR_FILENO, "ZUMBADOR INVALIDO MUNDO");
+      break;
+    case karel::RunResult::BAGUNDERFLOW:
+      WriteFileDescriptor(STDERR_FILENO, "ZUMBADOR INVALIDO MOCHILA");
+      break;
+    case karel::RunResult::STACK:
+      WriteFileDescriptor(STDERR_FILENO, "STACK OVERFLOW");
+      break;
+    case karel::RunResult::STACKMEMORY:
+      WriteFileDescriptor(STDERR_FILENO, "LIMITE DE MEMORIA DEL STACK");
+      break;
+    case karel::RunResult::CALLSIZE:
+      WriteFileDescriptor(STDERR_FILENO, "LIMITE DE LONGITUD DE LLAMADA");
+      break;
+    case karel::RunResult::INSTRUCTION:
+      WriteFileDescriptor(STDERR_FILENO, "LIMITE DE INSTRUCCIONES GENERAL");
+      break;
+    case karel::RunResult::INSTRUCTION_LEFT:
+      WriteFileDescriptor(STDERR_FILENO, "LIMITE DE INSTRUCCIONES IZQUIERDA");
+      break;
+    case karel::RunResult::INSTRUCTION_FORWARD:
+      WriteFileDescriptor(STDERR_FILENO, "LIMITE DE INSTRUCCIONES AVANZA");
+      break;
+    case karel::RunResult::INSTRUCTION_PICK:
+      WriteFileDescriptor(STDERR_FILENO, "LIMITE DE INSTRUCCIONES COGE_ZUMBADOR");
+      break;
+    case karel::RunResult::INSTRUCTION_LEAVE:
+      WriteFileDescriptor(STDERR_FILENO, "LIMITE DE INSTRUCCIONES DEJA_ZUMBADOR");
+      break;
+  }
   if (dump_result)
     world->DumpResult(result);
   else
