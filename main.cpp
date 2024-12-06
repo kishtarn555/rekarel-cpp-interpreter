@@ -1,6 +1,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+#include <getopt.h>
 
 #include <algorithm>
 #include <memory>
@@ -55,40 +56,75 @@ std::vector<uint8_t> ReadFully(int fd) {
 
 }  // namespace
 
+
+constexpr const char* PROGRAM_VERSION = "2.3.0";
+
+bool CheckVersion(const std::string& expected_version) {
+    std::istringstream prog_stream(PROGRAM_VERSION);
+    std::istringstream expect_stream(expected_version);
+    std::string prog_major, prog_minor, expect_major, expect_minor;
+
+    std::getline(prog_stream, prog_major, '.');
+    std::getline(prog_stream, prog_minor, '.');
+    std::getline(expect_stream, expect_major, '.');
+    std::getline(expect_stream, expect_minor, '.');
+
+    return prog_major == expect_major && prog_minor == expect_minor;
+}
+
 int main(int argc, char* argv[]) {
-  bool dump_result = true;
-
-  for (int i = 1; i < argc; ++i) {
-    std::string_view arg = argv[i];
-    if (arg.find(kFlagPrefix) != 0)
-      continue;
-    arg.remove_prefix(kFlagPrefix.size());
-
-    if (arg.find(kDumpFlagPrefix) == 0) {
-      arg.remove_prefix(kDumpFlagPrefix.size());
-      if (arg == "world")
-        dump_result = false;
-      else if (arg == "result")
-        dump_result = true;
-      else
-        Usage(argv[0]);
-    } else {
-      Usage(argv[0]);
-    }
-
-    // Shift all arguments by one.
-    --argc;
-    for (int j = i; j < argc; ++j)
-      argv[j] = argv[j + 1];
-    --i;
+  bool dump_result = true;  
+  struct option long_options[] = {
+      {"version", no_argument, nullptr, 'v'},
+      {"dump", required_argument, nullptr, 'd'},
+      {"input", required_argument, nullptr, 'i'},
+      {"output", required_argument, nullptr, 'o'},
+      {"expect-version", required_argument, nullptr, 'e'},
+      {nullptr, 0, nullptr, 0} // End of options
+  };
+  std::string expected_version = "";
+  std::optional<std::string> output_file;
+  int opt;
+  while ((opt = getopt_long(argc, argv, "vd:i:o:e:", long_options, nullptr)) != -1) {
+      switch (opt) {
+          case 'v':
+              LOG(INFO) << "Version: " << PROGRAM_VERSION << "\n";
+              return 0;
+          case 'd':
+              if (std::string_view(optarg) != "world" && std::string_view(optarg) != "result") {
+                  LOG(ERROR) << "Error: Invalid dump option. Use 'world' or 'result'.\n";
+                  Usage(argv[0]);
+                  return 1;
+              }
+              dump_result = std::string_view(optarg) == "world";
+              break;
+          case 'i':
+              // TODO: Implement this
+              // input_file = optarg;
+              break;
+          case 'o':
+              // TODO: Implement this
+              output_file = optarg;
+              break;
+          case 'e':
+              expected_version = optarg;
+              if (!CheckVersion(expected_version)) {
+                  LOG(ERROR) << "Error: Version mismatch. Expected: " << expected_version
+                            << ", Found: " << PROGRAM_VERSION << "\n";
+                  return 2;
+              }
+              break;
+          default:
+              Usage(argv[0]);
+      }
   }
 
-  if (argc < 2)
+  if (optind >= argc || argc < 2) {
     Usage(argv[0]);
-
-  ScopedFD program_fd(open(argv[1], O_RDONLY));
+  }
+  ScopedFD program_fd(open(argv[optind], O_RDONLY));
   if (!program_fd) {
-    PLOG(ERROR) << "Failed to open " << argv[1];
+    PLOG(ERROR) << "Failed to open " << argv[optind];
     return -1;
   }
   auto program_str = ReadFully(program_fd.get());
@@ -140,10 +176,23 @@ int main(int argc, char* argv[]) {
       WriteFileDescriptor(STDERR_FILENO, "LIMITE DE INSTRUCCIONES DEJA_ZUMBADOR");
       break;
   }
+  int output_fd = STDOUT_FILENO;
+  if (output_file) {
+      output_fd = open(output_file->c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+      if (output_fd == -1) {
+          perror("Error opening output file");
+          return 1;
+      }
+  }
+
   if (dump_result)
-    world->DumpResult(result);
+    world->DumpResult(result, output_fd);
   else
-    world->Dump();
+    world->Dump(output_fd);
+
+  if (output_fd != STDOUT_FILENO) {
+    close(output_fd);
+  }
 
   return static_cast<int32_t>(result);
 }
