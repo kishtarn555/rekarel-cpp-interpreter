@@ -9,7 +9,10 @@
 
 namespace karel {
 
-constexpr uint32_t kInfinity = 0xFFFFFFFFu;
+constexpr int32_t kInfinity = 1'000'000'005; /**Value used to represent infinity in Karel */
+
+constexpr int32_t kMaxInt = 999'999'999; /**Maximum integer value allowed in a Karel context */
+constexpr int32_t kMinInt = -999'999'999;/**Minimum value allowed in a Karel context */
 
 enum class Opcode : uint32_t {
   HALT,
