@@ -445,17 +445,3 @@ TEST_F(TestKarel, STACK_MEMORY_OVER_THE_LIMIT) {
   auto result = karel::Run(program,runtime);
   EXPECT_EQ(result, karel::RunResult::STACKMEMORY) << "Run should have ended in STACKMEMORY RTE";
 }
-
-TEST_F(TestKarel, INFINITE_INMUTABILITY) {
-  std::vector<karel::Instruction> program = {
-    {karel::Opcode::LOAD, karel::kInfinity},//0
-    {karel::Opcode::DEC, 1000},//1
-    {karel::Opcode::INC, 10},//2
-    {karel::Opcode::SRET},//3
-    {karel::Opcode::HALT},//4
-  };
-  runtime->stack_memory_limit = 12;
-  auto result = karel::Run(program,runtime);
-  EXPECT_EQ(result, karel::RunResult::OK) << "Run did not end in an OK status";  
-  ASSERT_EQ(karel::kInfinity, runtime->ret) << "RET should be unchanged to the value loaded";
-}

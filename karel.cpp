@@ -478,15 +478,11 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         break;
 
       case Opcode::DEC:
-        if (expression_stack.back() <= karel::kMaxInt) {
-          expression_stack.back() -= curr.arg;
-        }
+        expression_stack.back() -= curr.arg;
         break;
 
       case Opcode::INC:
-        if (expression_stack.back() <= karel::kMaxInt) {
-          expression_stack.back() += curr.arg;
-        }
+        expression_stack.back() += curr.arg;
         break;
 
       case Opcode::PARAM:
