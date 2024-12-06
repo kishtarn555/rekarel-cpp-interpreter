@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
                   Usage(argv[0]);
                   return 1;
               }
-              dump_result = std::string_view(optarg) == "world";
+              dump_result = std::string_view(optarg) == "result";
               break;
           case 'i':
               input_file = optarg;
