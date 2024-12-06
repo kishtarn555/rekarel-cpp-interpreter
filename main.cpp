@@ -84,6 +84,7 @@ int main(int argc, char* argv[]) {
   };
   std::string expected_version = "";
   std::optional<std::string> output_file;
+  std::optional<std::string> input_file;
   int opt;
   while ((opt = getopt_long(argc, argv, "vd:i:o:e:", long_options, nullptr)) != -1) {
       switch (opt) {
@@ -99,11 +100,9 @@ int main(int argc, char* argv[]) {
               dump_result = std::string_view(optarg) == "world";
               break;
           case 'i':
-              // TODO: Implement this
-              // input_file = optarg;
+              input_file = optarg;
               break;
           case 'o':
-              // TODO: Implement this
               output_file = optarg;
               break;
           case 'e':
@@ -132,8 +131,16 @@ int main(int argc, char* argv[]) {
       reinterpret_cast<const char*>(program_str.data()), program_str.size()));
   if (!program)
     return -1;
+  int input_fd = STDIN_FILENO;
+  if (input_file) {
+        input_fd = open(input_file->c_str(), O_RDONLY);
+        if (input_fd == -1) {
+            perror("Error opening file");
+            return 1;
+        }
+    }
 
-  auto world = karel::World::Parse(STDIN_FILENO);
+  auto world = karel::World::Parse(input_fd);
   if (!world)
     return -1;
 
@@ -192,6 +199,9 @@ int main(int argc, char* argv[]) {
 
   if (output_fd != STDOUT_FILENO) {
     close(output_fd);
+  }
+  if (input_fd != STDIN_FILENO) {
+    close(input_fd);
   }
 
   return static_cast<int32_t>(result);
