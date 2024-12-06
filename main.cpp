@@ -48,9 +48,26 @@ std::vector<uint8_t> ReadFully(int fd) {
 }
 
 
-[[noreturn]] void Usage(const std::string_view program_name) {
-  LOG(ERROR) << "Usage: " << program_name
-             << " [--dump={world,result}] program.kx < world.in > world.out";
+[[noreturn]] void Usage(const std::string_view program_name) {  
+  LOG(ERROR) 
+    << "Usage: " <<program_name << "<bytecode-file> [options]\n"
+    << "Arguments:\n"
+    << "  <bytecode-file>             The Karel bytecode file to execute. This is a required argument.\n"
+    << "Options:\n"
+    << "  -i, --input <input-path>    Specify a file to read the world input from. If not provided, the program reads from stdin.\n"
+    << "  -o, --output <output-path>  Specify a file to write the world output to. If not provided, the program writes to stdout.\n"
+    << "  -d, --dump {world|result}   Set the output type:\n"
+    << "    - result:   (default) Outputs the program's result.\n"
+    << "    - world:    Outputs the world input.\n"
+    << "  -e, --expect-version <major.minor>\n"
+    << "    Specify the required version of the program (major.minor).\n"
+    << "    If the version does not match, the program exits with an error.\n"
+    << "\n"
+    << "Example:\n"
+    << "  " << program_name << " mycode.kx -i world.in -o world.out -d world -e 3.2\n"
+    << "  " << program_name << " mycode.kx -d result\n"
+    << "  " << program_name << " --version \n"
+  ;
   exit(1);
 }
 
@@ -75,6 +92,7 @@ bool CheckVersion(const std::string& expected_version) {
 int main(int argc, char* argv[]) {
   bool dump_result = true;  
   struct option long_options[] = {
+      {"help", no_argument, nullptr, 'h'},
       {"version", no_argument, nullptr, 'v'},
       {"dump", required_argument, nullptr, 'd'},
       {"input", required_argument, nullptr, 'i'},
@@ -86,10 +104,10 @@ int main(int argc, char* argv[]) {
   std::optional<std::string> output_file;
   std::optional<std::string> input_file;
   int opt;
-  while ((opt = getopt_long(argc, argv, "vd:i:o:e:", long_options, nullptr)) != -1) {
+  while ((opt = getopt_long(argc, argv, "hvd:i:o:e:", long_options, nullptr)) != -1) {
       switch (opt) {
           case 'v':
-              LOG(INFO) << "Version: " << PROGRAM_VERSION << "\n";
+              WriteFileDescriptor(STDOUT_FILENO, std::string(PROGRAM_VERSION) + "\n");
               return 0;
           case 'd':
               if (std::string_view(optarg) != "world" && std::string_view(optarg) != "result") {
@@ -112,6 +130,9 @@ int main(int argc, char* argv[]) {
                             << ", Found: " << PROGRAM_VERSION << "\n";
                   return 2;
               }
+              break;
+          case 'h':
+              Usage(argv[0]);
               break;
           default:
               Usage(argv[0]);
