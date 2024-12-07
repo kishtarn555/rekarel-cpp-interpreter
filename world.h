@@ -23,9 +23,9 @@ namespace karel {
 
             static std::optional<World> Parse(int fd);
 
-            void Dump() const;
+            void Dump(int fd) const;
 
-            void DumpResult(karel::RunResult result) const;
+            void DumpResult(karel::RunResult result, int fd) const;
 
             karel::Runtime* runtime();
 

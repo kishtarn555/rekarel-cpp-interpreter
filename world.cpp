@@ -217,8 +217,8 @@ std::optional<World> World::Parse(int fd) {
     return std::make_optional<World>(std::move(world));
   }
 
-  void World::Dump() const {
-    xml::Writer writer(STDOUT_FILENO);
+  void World::Dump(int fd) const {
+    xml::Writer writer(fd);
 
     auto ejecucion = writer.CreateElement("ejecucion");
     {
@@ -375,9 +375,9 @@ std::optional<World> World::Parse(int fd) {
     }
   }
 
-  void World::DumpResult(karel::RunResult result) const {
+  void World::DumpResult(karel::RunResult result, int fd) const {
     {
-      xml::Writer writer(STDOUT_FILENO);
+      xml::Writer writer(fd);
 
       auto resultados = writer.CreateElement("resultados");
 
