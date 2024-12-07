@@ -426,6 +426,12 @@ std::optional<World> World::Parse(int fd) {
         case karel::RunResult::BAGUNDERFLOW:
           programa.AddAttribute("resultadoEjecucion", "ZUMBADOR INVALIDO MOCHILA");
           break;
+        case karel::RunResult::INTEGEROVERFLOW:
+          programa.AddAttribute("resultadoEjecucion", "INTEGER OVERFLOW");
+          break;
+        case karel::RunResult::INTEGERUNDERFLOW:
+          programa.AddAttribute("resultadoEjecucion", "INTEGER UNDERFLOW");
+          break;
         case karel::RunResult::INSTRUCTION:
           programa.AddAttribute("resultadoEjecucion",
                                 "LIMITE DE INSTRUCCIONES GENERAL");

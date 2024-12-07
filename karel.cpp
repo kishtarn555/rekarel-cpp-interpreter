@@ -250,6 +250,19 @@ struct StackFrame {
   size_t sp;
 };
 
+/**
+ * Checks if value is valid, if it is it returns RunResult::OK, otherwise it returns the error
+ */
+[[gnu::const]] karel::RunResult validateNumber(int32_t value) {
+  if (value > karel::kMaxInt) {
+    return karel::RunResult::INTEGEROVERFLOW;
+  }
+  if (value < karel::kMinInt) {
+    return karel::RunResult::INTEGERUNDERFLOW;
+  }
+  return karel::RunResult::OK;
+}
+
 }  // namespace
 
 std::optional<std::vector<Instruction>> ParseInstructions(
@@ -480,12 +493,18 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
       case Opcode::DEC:
         if (expression_stack.back() <= karel::kMaxInt) {
           expression_stack.back() -= curr.arg;
+          if (validateNumber(expression_stack.back()) != karel::RunResult::OK) {
+            return validateNumber(expression_stack.back());
+          }
         }
         break;
 
       case Opcode::INC:
         if (expression_stack.back() <= karel::kMaxInt) {
           expression_stack.back() += curr.arg;
+          if (validateNumber(expression_stack.back()) != karel::RunResult::OK) {
+            return validateNumber(expression_stack.back());
+          }
         }
         break;
 

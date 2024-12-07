@@ -188,6 +188,12 @@ int main(int argc, char* argv[]) {
     case karel::RunResult::CALLSIZE:
       WriteFileDescriptor(STDERR_FILENO, "LIMITE DE LONGITUD DE LLAMADA");
       break;
+    case karel::RunResult::INTEGEROVERFLOW:
+      WriteFileDescriptor(STDERR_FILENO, "INTEGER OVERFLOW");
+      break;
+    case karel::RunResult::INTEGERUNDERFLOW:
+      WriteFileDescriptor(STDERR_FILENO, "INTEGER UNDERFLOW");
+      break;
     case karel::RunResult::INSTRUCTION:
       WriteFileDescriptor(STDERR_FILENO, "LIMITE DE INSTRUCCIONES GENERAL");
       break;
