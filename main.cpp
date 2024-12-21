@@ -194,6 +194,9 @@ int main(int argc, char* argv[]) {
     case karel::RunResult::INTEGERUNDERFLOW:
       WriteFileDescriptor(STDERR_FILENO, "INTEGER UNDERFLOW");
       break;
+    case karel::RunResult::WORLDOVERFLOW:
+      WriteFileDescriptor(STDERR_FILENO, "DEMASIADOS ZUMBADORES (MUNDO)");
+      break;
     case karel::RunResult::INSTRUCTION:
       WriteFileDescriptor(STDERR_FILENO, "LIMITE DE INSTRUCCIONES GENERAL");
       break;
