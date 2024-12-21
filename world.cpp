@@ -435,6 +435,9 @@ std::optional<World> World::Parse(int fd) {
         case karel::RunResult::WORLDOVERFLOW:
           programa.AddAttribute("resultadoEjecucion", "DEMASIADOS ZUMBADORES (MUNDO)");
           break;
+        case karel::RunResult::BAGOVERFLOW:
+          programa.AddAttribute("resultadoEjecucion", "DEMASIADOS ZUMBADORES (MOCHILA)");
+          break;
         case karel::RunResult::INSTRUCTION:
           programa.AddAttribute("resultadoEjecucion",
                                 "LIMITE DE INSTRUCCIONES GENERAL");
