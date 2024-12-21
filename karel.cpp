@@ -460,8 +460,12 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
       case Opcode::PICKBUZZER:
         ic++;
         runtime->inc_buzzers(-1);
-        if (runtime->bag != kInfinity)
+        if (runtime->bag != kInfinity) {
+          if (runtime->bag + 1 > kMaxInt) {
+            return RunResult::BAGOVERFLOW;
+          }
           runtime->bag++;
+        }
         if (++runtime->pickbuzzer_count > runtime->pickbuzzer_limit)
           return RunResult::INSTRUCTION_PICK;
         break;
