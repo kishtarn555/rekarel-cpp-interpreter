@@ -432,6 +432,9 @@ std::optional<World> World::Parse(int fd) {
         case karel::RunResult::INTEGERUNDERFLOW:
           programa.AddAttribute("resultadoEjecucion", "INTEGER UNDERFLOW");
           break;
+        case karel::RunResult::WORLDOVERFLOW:
+          programa.AddAttribute("resultadoEjecucion", "DEMASIADOS ZUMBADORES (MUNDO)");
+          break;
         case karel::RunResult::INSTRUCTION:
           programa.AddAttribute("resultadoEjecucion",
                                 "LIMITE DE INSTRUCCIONES GENERAL");

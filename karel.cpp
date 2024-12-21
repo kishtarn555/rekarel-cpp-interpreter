@@ -468,6 +468,9 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
 
       case Opcode::LEAVEBUZZER:
         ic++;
+        if (runtime->get_buzzers() != kInfinity && runtime->get_buzzers() + 1 > kMaxInt) {
+          return RunResult::WORLDOVERFLOW;
+        }
         runtime->inc_buzzers(1);
         if (runtime->bag != kInfinity)
           runtime->bag--;
