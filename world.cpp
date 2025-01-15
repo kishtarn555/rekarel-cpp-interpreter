@@ -22,6 +22,7 @@ World::World(World&& other)
         height_(other.height_),
         name_(std::move(other.name_)),
         program_name_(std::move(other.program_name_)),
+        target_version(std::move(other.target_version)),
         buzzers_(std::move(other.buzzers_)),
         walls_(std::move(other.walls_)),
         buzzer_dump_(std::move(other.buzzer_dump_)),
@@ -57,7 +58,10 @@ std::optional<World> World::Parse(int fd) {
     World world;
     if (!xml::Reader().Parse(fd, [&world](xml::Reader::Element node) -> bool {
           const std::string_view name = node.GetName();
-          if (name == "mundo") {
+          if (name == "ejecucion") {
+              auto version = node.GetAttribute("version");
+              world.target_version = std::string(version.value_or("1.0"));
+          } else if (name == "mundo") {
             auto width = ParseString<uint32_t>(node.GetAttribute("ancho")),
                  height = ParseString<uint32_t>(node.GetAttribute("alto"));
             if (!width || !height)
@@ -395,7 +399,14 @@ std::optional<World> World::Parse(int fd) {
               if (printCoordinate) {
                 line << '(' << (x + 1) << ") ";
               }
-              line << (get_buzzers(x, y) & 0xFFFF) << ' ';
+              uint32_t dump_buzzers= get_buzzers(x, y);
+              if (dump_buzzers == karel::kInfinity) {
+                dump_buzzers = 0xFFFF; // Handle infinite as 2^16-1
+              }
+              if (target_version == "1.0") {
+                dump_buzzers = dump_buzzers & 0xFFFF; //Version 1.0 has a 16-bit output precision on beepers
+              }
+              line << (dump_buzzers) << ' ';
             }
             printCoordinate = get_buzzers(x, y) == 0;
           }
