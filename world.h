@@ -38,6 +38,7 @@ namespace karel {
             size_t height_;
             std::string name_;
             std::string program_name_;
+            std::string target_version;
             std::unique_ptr<uint32_t[]> buzzers_;
             std::unique_ptr<uint8_t[]> walls_;
             std::unique_ptr<bool[]> buzzer_dump_;

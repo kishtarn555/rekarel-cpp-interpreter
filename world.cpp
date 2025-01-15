@@ -57,7 +57,10 @@ std::optional<World> World::Parse(int fd) {
     World world;
     if (!xml::Reader().Parse(fd, [&world](xml::Reader::Element node) -> bool {
           const std::string_view name = node.GetName();
-          if (name == "mundo") {
+          if (name == "ejecion") {
+              auto version = node.GetAttribute("version");
+              world.target_version = version.value_or("1.0");
+          } else if (name == "mundo") {
             auto width = ParseString<uint32_t>(node.GetAttribute("ancho")),
                  height = ParseString<uint32_t>(node.GetAttribute("alto"));
             if (!width || !height)
