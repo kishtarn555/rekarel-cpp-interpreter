@@ -74,7 +74,7 @@ std::vector<uint8_t> ReadFully(int fd) {
 }  // namespace
 
 
-constexpr const char* PROGRAM_VERSION = "2.3.0";
+constexpr const char* PROGRAM_VERSION = "2.3.1";
 
 bool CheckVersion(const std::string& expected_version) {
     std::istringstream prog_stream(PROGRAM_VERSION);
