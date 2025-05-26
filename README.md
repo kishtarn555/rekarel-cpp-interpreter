@@ -36,11 +36,14 @@ Depending on the run of the code, it may give a certain exit signal and output t
 | USAGE                   | 1           | USAGE karel [--dump={world,result}] program.kx < world.in > world.out | The arguments of the command were wrong. |
 | OK                      | 0           | ----                                  | No error, execution succeeded.                                     |
 | WALL                    | 16          | MOVIMIENTO INVALIDO                   | Karel tried to move into a wall.                                   |
-| WORLDUNDERFLOW          | 17          | ZUMBADOR INVALIDO MUNDO               | Karel tried to take a beeper on an empty cell.                     |
-| BAGUNDERFLOW            | 18          | ZUMBADOR INVALIDO MOCHILA             | Karel tried to leave a beeper with an empty bag.                   |
+| WORLDUNDERFLOW          | 17          | ZUMBADOR INVALIDO (MUNDO)             | Karel tried to take a beeper on an empty cell.                     |
+| BAGUNDERFLOW            | 18          | ZUMBADOR INVALIDO (MOCHILA)           | Karel tried to leave a beeper with an empty bag.                   |
 | STACK                   | 19          | STACK OVERFLOW                        | Karel suffered a stack overflow.                                   |
 | STACKMEMORY             | 20          | LIMITE DE MEMORIA DEL STACK           | Karel exceeded the stack memory limits.                            |
 | CALLSIZE                | 21          | LIMITE DE LONGITUD DE LLAMADA         | Karel exceeded the number of parameters permitted in a call.       |
+| INTEGEROVERFLOW         | 22          | INTEGER OVERFLOW                      | Karel exceeded the upper limit of a parameter.                     |
+| INTEGERUNDERFLOW        | 23          | INTEGER UNDERFLOW                     | Karel exceeded the lower limit of a parameter.                     |
+| WORLDOVERFLOW           | 24          | DEMASIADOS ZUMBADORES (MUNDO)         | Karel exceeded the upper limit of beepers in a cell.               |
 | INSTRUCTION             | 48          | LIMITE DE INSTRUCCIONES GENERAL       | Karel exceeded the general number of allowed instructions.         |
 | INSTRUCTION_LEFT        | 49          | LIMITE DE INSTRUCCIONES IZQUIERDA     | Karel exceeded the number of allowed turnleft.                     |
 | INSTRUCTION_FORWARD     | 50          | LIMITE DE INSTRUCCIONES AVANZA        | Karel exceeded the number of allowed move.                         |
