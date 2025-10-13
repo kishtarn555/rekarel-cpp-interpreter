@@ -529,7 +529,7 @@ std::optional<World> World::Parse(int fd) {
         }
       }
     }
-    ignore_result(write(STDOUT_FILENO, "\n", 1));
+    // ignore_result(write(STDOUT_FILENO, "\n", 1));
   }
 
   karel::Runtime* World::runtime() { return &runtime_; }
