@@ -28,13 +28,13 @@ for problem in "${ROOT}/test_suite/rte/"*; do
         exit_code=$?
 
         # Compare stdout
-        if ! diff -Naurw --ignore-blank-lines "$expected_stdout" "$actual_stdout"; then
+        if ! diff -Naurw "$expected_stdout" "$actual_stdout"; then
             echo "> STDOUT does not match for $case_name !!!!"
         fi
         echo "------------------------------------"
 
         # Compare stderr
-        if ! diff -Naurw --ignore-blank-lines "$expected_stderr" "$actual_stderr"; then
+        if ! diff -Naurw "$expected_stderr" "$actual_stderr"; then
             echo "> STDERR does not match for $case_name !!!!"
         fi
         echo "------------------------------------"

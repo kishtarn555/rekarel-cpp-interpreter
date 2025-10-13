@@ -17,7 +17,7 @@ for problem in "${ROOT}/test_suite/problems/"*; do
         case_name=$(basename "${casename}")
 
 		{
-            ${ROOT}/bin/karel "${ROOT}/bin/${problem_name}.kx" < "${casename}" | diff -Naurw --ignore-blank-lines "${casename%.in}.out" -
+            ${ROOT}/bin/karel "${ROOT}/bin/${problem_name}.kx" < "${casename}" | diff -Naur --ignore-blank-lines "${casename%.in}.out" -
         } &
 	done
     wait
