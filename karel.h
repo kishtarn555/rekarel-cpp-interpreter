@@ -48,7 +48,8 @@ enum class Opcode : uint32_t {
   LT,
   LTE,
   COLUMN,
-  ROW
+  ROW,
+  SNAPSHOT
 };
 
 constexpr const char* kOpcodeNames[] = {
@@ -58,13 +59,24 @@ constexpr const char* kOpcodeNames[] = {
     "FORWARD", "WORLDBUZZERS", "BAGBUZZERS", "PICKBUZZER", "LEAVEBUZZER",
     "LOAD",    "POP",          "DUP",        "DEC",        "INC",
     "CALL",    "RET",          "PARAM",      "SRET",       "LRET",
-    "LT",      "LTE"
+    "LT",      "LTE",          "COLUMN",     "ROW",        "SNAPSHOT"
   };
 
 struct Instruction {
   Opcode opcode = Opcode::HALT;
   int32_t arg = 0;
   int32_t arg2 = 0;
+};
+
+struct Snapshot {
+  size_t x = 0;
+  size_t y = 0;
+  size_t orientation = 0;
+  size_t bag = 0;
+  size_t forward_count = 0;
+  size_t left_count = 0;
+  size_t leavebuzzer_count = 0;
+  size_t pickbuzzer_count = 0;
 };
 
 enum class RunResult : uint32_t {
@@ -106,6 +118,7 @@ struct Runtime {
   size_t leavebuzzer_count = 0;
   size_t pickbuzzer_count = 0;
   size_t stack_memory = 0;
+  std::vector<Snapshot> snapshots;
 
   size_t width = 100;
   size_t height = 100;

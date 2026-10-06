@@ -101,6 +101,8 @@ std::optional<Opcode> ParseOpcode(std::string_view name) {
     return Opcode::COLUMN;
   if (name == "ROW")
     return Opcode::ROW;
+  if (name == "SNAPSHOT")
+    return Opcode::SNAPSHOT;
   LOG(ERROR) << "Invalid mnemonic: " << name;
   return std::nullopt;
 }
@@ -166,6 +168,7 @@ std::optional<Instruction> ParseInstruction(const json::ListValue& value) {
     case Opcode::LTE:
     case Opcode::COLUMN:
     case Opcode::ROW:
+    case Opcode::SNAPSHOT:
       // nullary
       if (value.value().size() != 1) {
         LOG(ERROR) << "Unexpected argument to " << value;
@@ -298,6 +301,7 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
   size_t ic = 0;
   std::stack<StackFrame> function_stack;
   std::vector<int32_t> expression_stack;
+  runtime->snapshots.clear();
 
   while (static_cast<size_t>(pc) < program.size()) {
     if (ic >= runtime->instruction_limit)
@@ -548,6 +552,17 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         break;
       case Opcode::ROW:
         expression_stack.emplace_back(runtime->y+1);
+        break;
+      case Opcode::SNAPSHOT:
+        runtime->snapshots.push_back(Snapshot{
+            runtime->x,
+            runtime->y,
+            runtime->orientation,
+            runtime->bag,
+            runtime->forward_count,
+            runtime->left_count,
+            runtime->leavebuzzer_count,
+            runtime->pickbuzzer_count});
         break;
     }
 

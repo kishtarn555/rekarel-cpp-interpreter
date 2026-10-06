@@ -479,53 +479,89 @@ std::optional<World> World::Parse(int fd) {
           programa.AddAttribute("resultadoEjecucion", "LIMITE DE LONGITUD DE LLAMADA");
           break;
       }
-      if (dump_position_ || dump_orientation_ || dump_bag_) {
-        auto karel = programa.CreateElement("karel");
+      auto add_karel_attributes = [&](xml::Writer::Element& karel_element,
+                                      size_t x, size_t y, size_t orientation,
+                                      size_t bag) {
         if (dump_position_) {
-          karel.AddAttribute("x", StringPrintf("%zu", runtime_.x + 1));
-          karel.AddAttribute("y", StringPrintf("%zu", runtime_.y + 1));
+          karel_element.AddAttribute("x", StringPrintf("%zu", x + 1));
+          karel_element.AddAttribute("y", StringPrintf("%zu", y + 1));
         }
         if (dump_orientation_) {
-          switch (runtime_.orientation) {
+          switch (orientation) {
             case 0:
-              karel.AddAttribute("direccion", "OESTE");
+              karel_element.AddAttribute("direccion", "OESTE");
               break;
             case 1:
-              karel.AddAttribute("direccion", "NORTE");
+              karel_element.AddAttribute("direccion", "NORTE");
               break;
             case 2:
-              karel.AddAttribute("direccion", "ESTE");
+              karel_element.AddAttribute("direccion", "ESTE");
               break;
             case 3:
-              karel.AddAttribute("direccion", "SUR");
+              karel_element.AddAttribute("direccion", "SUR");
               break;
           }
         }
         if (dump_bag_) {
-          if (runtime_.bag == karel::kInfinity)
-            karel.AddAttribute("mochila", "INFINITO");
+          if (bag == karel::kInfinity)
+            karel_element.AddAttribute("mochila", "INFINITO");
           else
-            karel.AddAttribute("mochila", StringPrintf("%zu", runtime_.bag));
+            karel_element.AddAttribute("mochila", StringPrintf("%zu", bag));
         }
+      };
+      if (dump_position_ || dump_orientation_ || dump_bag_) {
+        auto karel_element = programa.CreateElement("karel");
+        add_karel_attributes(karel_element, runtime_.x, runtime_.y,
+                             runtime_.orientation, runtime_.bag);
       }
+
+      auto add_instruction_attributes =
+          [&](xml::Writer::Element& instrucciones, size_t forward_count,
+              size_t left_count, size_t pickbuzzer_count,
+              size_t leavebuzzer_count) {
+            if (dump_forward_) {
+              instrucciones.AddAttribute("avanza",
+                                         StringPrintf("%zu", forward_count));
+            }
+            if (dump_left_) {
+              instrucciones.AddAttribute(
+                  "gira_izquierda", StringPrintf("%zu", left_count));
+            }
+            if (dump_pickbuzzer_) {
+              instrucciones.AddAttribute(
+                  "coge_zumbador", StringPrintf("%zu", pickbuzzer_count));
+            }
+            if (dump_leavebuzzer_) {
+              instrucciones.AddAttribute(
+                  "deja_zumbador", StringPrintf("%zu", leavebuzzer_count));
+            }
+          };
       if (dump_forward_ || dump_left_ || dump_leavebuzzer_ ||
           dump_pickbuzzer_) {
         auto instrucciones = programa.CreateElement("instrucciones");
-        if (dump_forward_) {
-          instrucciones.AddAttribute(
-              "avanza", StringPrintf("%zu", runtime_.forward_count));
-        }
-        if (dump_left_) {
-          instrucciones.AddAttribute("gira_izquierda",
-                                     StringPrintf("%zu", runtime_.left_count));
-        }
-        if (dump_pickbuzzer_) {
-          instrucciones.AddAttribute(
-              "coge_zumbador", StringPrintf("%zu", runtime_.pickbuzzer_count));
-        }
-        if (dump_leavebuzzer_) {
-          instrucciones.AddAttribute(
-              "deja_zumbador", StringPrintf("%zu", runtime_.leavebuzzer_count));
+        add_instruction_attributes(
+            instrucciones, runtime_.forward_count, runtime_.left_count,
+            runtime_.pickbuzzer_count, runtime_.leavebuzzer_count);
+      }
+      if (!runtime_.snapshots.empty()) {
+        auto snapshots = programa.CreateElement("snapshots");
+        for (size_t id = 0; id < runtime_.snapshots.size(); ++id) {
+          const auto& snapshot = runtime_.snapshots[id];
+          auto snapshot_element = snapshots.CreateElement("snapshot");
+          snapshot_element.AddAttribute("id", StringPrintf("%zu", id));
+          if (dump_position_ || dump_orientation_ || dump_bag_) {
+            auto karel_element = snapshot_element.CreateElement("karel");
+            add_karel_attributes(karel_element, snapshot.x, snapshot.y,
+                                 snapshot.orientation, snapshot.bag);
+          }
+          if (dump_forward_ || dump_left_ || dump_leavebuzzer_ ||
+              dump_pickbuzzer_) {
+            auto instrucciones =
+                snapshot_element.CreateElement("instrucciones");
+            add_instruction_attributes(
+                instrucciones, snapshot.forward_count, snapshot.left_count,
+                snapshot.pickbuzzer_count, snapshot.leavebuzzer_count);
+          }
         }
       }
     }
